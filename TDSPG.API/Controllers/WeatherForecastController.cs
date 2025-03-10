@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using TDSPG.API.Domain.Entity;
+using TDSPG.API.Domain.Enums;
 
 namespace TDSPG.API.Controllers;
 
@@ -21,6 +23,8 @@ public class WeatherForecastController : ControllerBase
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {
+        Establishment establishment = new("Restaurant", "123", EstablishmentType.Restaurant);
+
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),

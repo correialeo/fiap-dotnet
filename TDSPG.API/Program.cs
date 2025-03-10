@@ -1,5 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using TDSPG.API.Infrastructure.Context;
 
 namespace TDSPG.API
 {
@@ -31,6 +33,12 @@ namespace TDSPG.API
                             }
                     });
             });
+
+            builder.Services.AddDbContext<TDSPGContext>(options =>
+                {
+                    options.UseOracle(builder.Configuration.GetConnectionString("Oracle"));
+                }
+            );
 
             var app = builder.Build();
 
