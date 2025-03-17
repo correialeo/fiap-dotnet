@@ -1,38 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using TDSPG.API.Domain.Entity;
-using TDSPG.API.Infrastructure.Context;
+using TDSPG.API.Infrastructure.Persistence.Repositories;
 
 namespace TDSPG.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EstablishmentController : ControllerBase
+    public class EstablishmentsController : ControllerBase
     {
-        private readonly TDSPGContext _context;
+        private readonly IRepository<Establishment> _establishmentRepository;
 
-        public EstablishmentController(TDSPGContext context)
+        public EstablishmentsController(IRepository<Establishment> establishmentRepository)
         {
-            _context = context;
+            _establishmentRepository = establishmentRepository;
         }
 
-        // GET: api/Establishment
+        // GET: api/Establishments
+        //select * from Establishments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Establishment>>> GetEstablishments()
+        public async Task<IEnumerable<Establishment>> GetEstablishments()
         {
-            return await _context.Establishments.ToListAsync();
+            return await _establishmentRepository.GetAsync();
         }
 
-        // GET: api/Establishment/5
+        // GET: api/Establishments/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Establishment>> GetEstablishment(Guid id)
         {
-            var establishment = await _context.Establishments.FindAsync(id);
+            var establishment = await _establishmentRepository.GetByIdAsync(id);
 
             if (establishment == null)
             {
@@ -42,7 +37,7 @@ namespace TDSPG.API.Controllers
             return establishment;
         }
 
-        // PUT: api/Establishment/5
+        // PUT: api/Establishments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEstablishment(Guid id, Establishment establishment)
@@ -52,57 +47,36 @@ namespace TDSPG.API.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(establishment).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EstablishmentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _establishmentRepository.UpdateAsync(establishment);
 
             return NoContent();
         }
 
-        // POST: api/Establishment
+        // POST: api/Establishments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Establishment>> PostEstablishment(Establishment establishment)
         {
-            _context.Establishments.Add(establishment);
-            await _context.SaveChangesAsync();
+            //"insert into Establ values()";
+            //"commit";
+
+            await _establishmentRepository.AddAsync(establishment);
 
             return CreatedAtAction("GetEstablishment", new { id = establishment.EstablishmentId }, establishment);
         }
 
-        // DELETE: api/Establishment/5
+        // DELETE: api/Establishments/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEstablishment(Guid id)
         {
-            var establishment = await _context.Establishments.FindAsync(id);
+            var establishment = await _establishmentRepository.GetByIdAsync(id);
             if (establishment == null)
             {
                 return NotFound();
             }
-
-            _context.Establishments.Remove(establishment);
-            await _context.SaveChangesAsync();
+            await _establishmentRepository.DeleteAsync(id);
 
             return NoContent();
-        }
-
-        private bool EstablishmentExists(Guid id)
-        {
-            return _context.Establishments.Any(e => e.EstablishmentId == id);
         }
     }
 }

@@ -1,7 +1,10 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using TDSPG.API.Domain.Entity;
 using TDSPG.API.Infrastructure.Context;
+using TDSPG.API.Infrastructure.Persistence;
+using TDSPG.API.Infrastructure.Persistence.Repositories;
 
 namespace TDSPG.API
 {
@@ -39,6 +42,8 @@ namespace TDSPG.API
                     options.UseOracle(builder.Configuration.GetConnectionString("Oracle"));
                 }
             );
+
+            builder.Services.AddScoped<IRepository<Establishment>, Repository<Establishment>>();
 
             var app = builder.Build();
 
