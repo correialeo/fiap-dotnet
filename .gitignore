@@ -3,3 +3,6 @@
 ################################################################################
 
 /TDSPG.API/appsettings.Development.json
+/.vs
+/TDSPG.MachineLearning/bin/Debug/net8.0
+/TDSPG.MachineLearning/obj

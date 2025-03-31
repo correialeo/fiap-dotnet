@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 using TDSPG.API.Infrastructure.Context;
@@ -11,9 +12,11 @@ using TDSPG.API.Infrastructure.Context;
 namespace TDSPG.API.Migrations
 {
     [DbContext(typeof(TDSPGContext))]
-    partial class TDSPGContextModelSnapshot : ModelSnapshot
+    [Migration("20250331114750_vCreated")]
+    partial class vCreated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
